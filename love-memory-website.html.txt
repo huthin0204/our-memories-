@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hữu Thiện & Thanh Ngân - 6 Tháng Yêu Thương</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        .memory-card {
+            transition: transform 0.3s;
+        }
+        .memory-card:hover {
+            transform: scale(1.02);
+        }
+        .tree-branch {
+            position: relative;
+            padding-left: 30px;
+        }
+        .tree-branch::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: #4CAF50;
+        }
+        .tree-leaf::before {
+            content: '🍃';
+            position: absolute;
+            left: -25px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body class="bg-pink-50 min-h-screen">
+    <!-- Header -->
+    <header class="text-center py-8 bg-gradient-to-r from-pink-400 to-purple-400 text-white">
+        <h1 class="text-4xl font-bold mb-2">Hữu Thiện & Thanh Ngân</h1>
+        <p class="text-xl">6 Tháng Yêu Thương</p>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg mb-6">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-center">
+                <button onclick="showGallery()" class="px-4 py-2 m-2 bg-pink-500 text-white rounded-lg">
+                    Thư Viện Ảnh
+                </button>
+                <button onclick="showMemoryTree()" class="px-4 py-2 m-2 bg-purple-500 text-white rounded-lg">
+                    Cây Kỷ Niệm
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Photo Gallery Section -->
+    <section id="gallery" class="container mx-auto px-4 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="memory-card bg-white rounded-lg shadow-lg overflow-hidden">
+                <div class="relative pb-2/3">
+                    <label class="cursor-pointer">
+                        <input type="file" class="hidden" onchange="previewImage(this)">
+                        <img src="/api/placeholder/400/300" alt="Kỷ niệm" class="w-full h-64 object-cover">
+                    </label>
+                </div>
+                <div class="p-4">
+                    <input type="text" placeholder="Thêm mô tả..." class="w-full p-2 border rounded">
+                    <div class="mt-2 text-sm text-gray-600">
+                        Nhấn vào ảnh để thay đổi
+                    </div>
+                </div>
+            </div>
+            <!-- Repeat for more photo slots -->
+        </div>
+        <button onclick="addPhotoCard()" class="mt-4 px-6 py-3 bg-green-500 text-white rounded-lg mx-auto block">
+            <i class="fas fa-plus mr-2"></i>Thêm Ảnh
+        </button>
+    </section>
+
+    <!-- Memory Tree Section -->
+    <section id="memoryTree" class="container mx-auto px-4 mb-8 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="tree-container">
+                <div class="tree-branch tree-leaf mb-6">
+                    <div class="memory-content bg-green-50 p-4 rounded-lg">
+                        <h3 class="font-bold text-lg">Ngày Đầu Tiên Gặp Nhau</h3>
+                        <p class="text-gray-600">Mô tả kỷ niệm của bạn...</p>
+                        <input type="date" class="mt-2 p-2 border rounded">
+                    </div>
+                </div>
+                <!-- More memory branches -->
+            </div>
+            <button onclick="addMemoryBranch()" class="mt-4 px-6 py-3 bg-green-500 text-white rounded-lg">
+                <i class="fas fa-plus mr-2"></i>Thêm Kỷ Niệm
+            </button>
+        </div>
+    </section>
+
+    <script>
+        function showGallery() {
+            document.getElementById('gallery').classList.remove('hidden');
+            document.getElementById('memoryTree').classList.add('hidden');
+        }
+
+        function showMemoryTree() {
+            document.getElementById('gallery').classList.add('hidden');
+            document.getElementById('memoryTree').classList.remove('hidden');
+        }
+
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    input.parentElement.querySelector('img').src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function addPhotoCard() {
+            const template = `
+                <div class="memory-card bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="relative pb-2/3">
+                        <label class="cursor-pointer">
+                            <input type="file" class="hidden" onchange="previewImage(this)">
+                            <img src="/api/placeholder/400/300" alt="Kỷ niệm" class="w-full h-64 object-cover">
+                        </label>
+                    </div>
+                    <div class="p-4">
+                        <input type="text" placeholder="Thêm mô tả..." class="w-full p-2 border rounded">
+                        <div class="mt-2 text-sm text-gray-600">
+                            Nhấn vào ảnh để thay đổi
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.querySelector('#gallery .grid').insertAdjacentHTML('beforeend', template);
+        }
+
+        function addMemoryBranch() {
+            const template = `
+                <div class="tree-branch tree-leaf mb-6">
+                    <div class="memory-content bg-green-50 p-4 rounded-lg">
+                        <h3 class="font-bold text-lg">
+                            <input type="text" placeholder="Tiêu đề kỷ niệm..." class="w-full p-2 border rounded">
+                        </h3>
+                        <textarea placeholder="Mô tả kỷ niệm của bạn..." class="w-full mt-2 p-2 border rounded"></textarea>
+                        <input type="date" class="mt-2 p-2 border rounded">
+                    </div>
+                </div>
+            `;
+            document.querySelector('.tree-container').insertAdjacentHTML('beforeend', template);
+        }
+    </script>
+</body>
+</html>
